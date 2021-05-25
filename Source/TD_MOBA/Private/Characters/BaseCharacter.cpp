@@ -11,6 +11,41 @@ ABaseCharacter::ABaseCharacter()
 
 }
 
+UAbilitySystemComponent* ABaseCharacter::GetAbilitySystemComponent() const
+{
+	return MobaAbilitySystemComponent;
+}
+
+int32 ABaseCharacter::GetCharacterLevel() const
+{
+	return 0;
+}
+
+float ABaseCharacter::GetHealth() const
+{
+	return 0.f;
+}
+
+float ABaseCharacter::GetMaxHealth() const
+{
+	return  0.f;
+}
+
+float ABaseCharacter::GetMana() const
+{
+	return 0.f;
+}
+
+float ABaseCharacter::GetMaxMana() const
+{
+	return  0.f;
+}
+
+float ABaseCharacter::GetMoveSpeed() const
+{
+	return 0.f;
+}
+
 // Called when the game starts or when spawned
 void ABaseCharacter::BeginPlay()
 {
