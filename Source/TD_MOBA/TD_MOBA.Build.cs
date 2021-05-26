@@ -17,6 +17,7 @@ public class TD_MOBA : ModuleRules
 			"GameplayAbilities",
 			"GameplayTags",
 			"GameplayTasks",
+			"AIModule",
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });
