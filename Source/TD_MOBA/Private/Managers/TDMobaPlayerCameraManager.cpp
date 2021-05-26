@@ -20,6 +20,21 @@ void ATDMobaPlayerCameraManager::MoveUp(float Val)
 	FreeCamOffset.Y += Val;
 }
 
+void ATDMobaPlayerCameraManager::LockCamera(bool Lock)
+{
+	bLockCamera = Lock;
+	FreeCamOffset = bLockCamera ? FVector::ZeroVector: GetPawnCamera()->GetComponentLocation() ;
+}
+
+UCameraComponent * ATDMobaPlayerCameraManager::GetPawnCamera()
+{
+	if (!PawnCamera)
+	{
+		PawnCamera = Cast<UCameraComponent>(PCOwner->GetPawn()->GetComponentByClass(UCameraComponent::StaticClass()));
+	}
+	return PawnCamera;
+}
+
 void ATDMobaPlayerCameraManager::UpdateViewTarget(FTViewTarget& OutVT, float DeltaTime)
 {
 	/**
@@ -45,9 +60,14 @@ void ATDMobaPlayerCameraManager::UpdateViewTarget(FTViewTarget& OutVT, float Del
 	OutVT.POV.PostProcessBlendWeight = 1.0f;
 	
 	UpdateViewTargetInternal(OutVT, DeltaTime);
-	
-	OutVT.POV.Location = FreeCamOffset;
-	OutVT.POV.Rotation = PCOwner->GetControlRotation();
+	/*
+	*锁住camera是指相机跟着pawn位移，反之跟着mouse走
+	*/
+	if (!bLockCamera)
+	{
+		OutVT.POV.Location = FreeCamOffset;
+	}
+
 	ApplyCameraModifiers(DeltaTime, OutVT.POV);
 
 	SetActorLocationAndRotation(OutVT.POV.Location, OutVT.POV.Rotation, false);

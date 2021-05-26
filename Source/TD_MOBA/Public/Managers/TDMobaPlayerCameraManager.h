@@ -4,11 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Camera/PlayerCameraManager.h"
+#include "camera/CameraComponent.h"
 #include "TDMobaPlayerCameraManager.generated.h"
 
 /**
- * 
+ *
  */
+
 UCLASS()
 class TD_MOBA_API ATDMobaPlayerCameraManager : public APlayerCameraManager
 {
@@ -16,11 +18,32 @@ class TD_MOBA_API ATDMobaPlayerCameraManager : public APlayerCameraManager
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void MoveRight(float Val);
-	
+		void MoveRight(float Val);
+
 	UFUNCTION(BlueprintCallable)
-	void MoveUp(float Val);
+		void MoveUp(float Val);
+
+	UFUNCTION(BlueprintCallable)
+		void LockCamera(bool Lock);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure)
+		bool IsCameraLocak()
+	{
+		return bLockCamera;
+	}
+
+	UFUNCTION(BlueprintCallable)
+		void ResetCameraPOV()
+	{
+		if(!bLockCamera)
+		FreeCamOffset = GetPawnCamera()->GetComponentLocation();
+	};
+
+	UCameraComponent * GetPawnCamera();
+	UCameraComponent *PawnCamera = nullptr;
 
 protected:
 	virtual void UpdateViewTarget(FTViewTarget& OutVT, float DeltaTime) override;
+
+	bool bLockCamera = true;
 };
