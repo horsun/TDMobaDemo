@@ -33,6 +33,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void LockCamera(bool Lock);
 
+	UFUNCTION(BlueprintCallable)
+		void UpdatePOV(FTViewTarget & OutVT);
+
 	UFUNCTION(BlueprintCallable, BlueprintPure)
 	bool IsCameraLocak()
 	{
