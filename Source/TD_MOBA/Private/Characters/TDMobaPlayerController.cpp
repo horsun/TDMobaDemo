@@ -3,6 +3,8 @@
 
 #include "Characters/TDMobaPlayerController.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "UObject/UObjectGlobals.h"
+#include "Blueprint/UserWidget.h"
 
 ATDMobaPlayerController::ATDMobaPlayerController(const FObjectInitializer& ObjectInitializer)
 {
@@ -61,6 +63,14 @@ void ATDMobaPlayerController::Tick(float DeltaSeconds)
 void ATDMobaPlayerController::BeginPlay()
 {
 	TDMobaCameraManager = Cast<ATDMobaPlayerCameraManager>(PlayerCameraManager);
+	//显示光标，并将光标替换
+	bShowMouseCursor = true;
+	TSubclassOf<UUserWidget> CursorWidget = LoadClass<UUserWidget>(this, TEXT("/Game/Blueprints/UMG/CursorWidget.CursorWidget_C"));
+	if (CursorWidget)
+	{
+		UUserWidget * CursorWidgetObject = CreateWidget(GetWorld(), CursorWidget);
+		SetMouseCursorWidget(EMouseCursor::Default, CursorWidgetObject);
+	}
 }
 
 void ATDMobaPlayerController::ViewerSwitch()

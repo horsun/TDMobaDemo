@@ -36,56 +36,56 @@ void ATDMobaPlayerCameraManager::UpdatePOV(FTViewTarget & OutVT)
 	if (!bLockCamera && GetPawnCamera())
 	{
 		OutVT.POV.Location = FreeCamOffset;
+
+
+		//TODO : 根据Mouse的XY 对POV进行上下左右移动
+		FVector2D MousePosition;
+		ULocalPlayer* const LocalPlayer = Cast<ULocalPlayer>(PCOwner->Player);
+		if (!LocalPlayer->ViewportClient->GetMousePosition(MousePosition))
+		{
+			return;
+		}
+		FViewport * Viewport = LocalPlayer->ViewportClient->Viewport;
+		const FIntPoint ViewportSize = Viewport->GetSizeXY();
+		const uint32 ViewLeft = FMath::TruncToInt(LocalPlayer->Origin.X * ViewportSize.X);
+		const uint32 ViewRight = ViewLeft + FMath::TruncToInt(LocalPlayer->Size.X * ViewportSize.X);
+		const uint32 ViewTop = FMath::TruncToInt(LocalPlayer->Origin.Y * ViewportSize.Y);
+		const uint32 ViewBottom = ViewTop + FMath::TruncToInt(LocalPlayer->Size.Y * ViewportSize.Y);
+		const uint32 MouseX = MousePosition.X;//鼠标的x轴
+		const uint32 MouseY = MousePosition.Y;//鼠标y轴
+		const uint32 CameraActiveBorder = 20;
+		const float ScrollSpeed = 50.f;
+		if (MouseX >= ViewLeft && MouseX <= (ViewLeft + CameraActiveBorder))
+		{
+			const float delta = 1.0f - float(MouseX - ViewLeft) / CameraActiveBorder;
+			//SpectatorCameraSpeed = delta * MaxSpeed;
+			MoveRight(-ScrollSpeed * delta);
+		}
+		else if (MouseX >= (ViewRight - CameraActiveBorder) && MouseX <= ViewRight)
+		{
+			const float delta = float(MouseX - ViewRight + CameraActiveBorder) / CameraActiveBorder;
+			//SpectatorCameraSpeed = delta * MaxSpeed;
+			MoveRight(ScrollSpeed * delta);
+		}
+
+		if (MouseY >= ViewTop && MouseY <= (ViewTop + CameraActiveBorder))
+		{
+			const float delta = 1.0f - float(MouseY - ViewTop) / CameraActiveBorder;
+			//SpectatorCameraSpeed = delta * MaxSpeed;
+			MoveUp(ScrollSpeed * delta);
+		}
+		else if (MouseY >= (ViewBottom - CameraActiveBorder) && MouseY <= ViewBottom)
+		{
+			const float delta = float(MouseY - (ViewBottom - CameraActiveBorder)) / CameraActiveBorder;
+			//SpectatorCameraSpeed = delta * MaxSpeed;
+			MoveUp(-ScrollSpeed * delta);
+		}
 	}
 
 	//计算ZoomIn /ZoomOut,根据相机的朝向进行距离的拉近拉远。
 	FVector zoomVector = OutVT.POV.Rotation.Vector();
 	zoomVector.Normalize();
 	OutVT.POV.Location += zoomVector * ZoomVal;
-
-
- //TODO : 根据Mouse的XY 对POV进行上下左右移动
-	FVector2D MousePosition;
-	ULocalPlayer* const LocalPlayer = Cast<ULocalPlayer>(PCOwner->Player);
-	if (!LocalPlayer->ViewportClient->GetMousePosition(MousePosition))
-	{
-		return;
-	}
-	FViewport * Viewport = LocalPlayer->ViewportClient->Viewport;
-	const FIntPoint ViewportSize = Viewport->GetSizeXY();
-	const uint32 ViewLeft = FMath::TruncToInt(LocalPlayer->Origin.X * ViewportSize.X);
-	const uint32 ViewRight = ViewLeft + FMath::TruncToInt(LocalPlayer->Size.X * ViewportSize.X);
-	const uint32 ViewTop = FMath::TruncToInt(LocalPlayer->Origin.Y * ViewportSize.Y);
-	const uint32 ViewBottom = ViewTop + FMath::TruncToInt(LocalPlayer->Size.Y * ViewportSize.Y);
-	const uint32 MouseX = MousePosition.X;//鼠标的x轴
-	const uint32 MouseY = MousePosition.Y;//鼠标y轴
-	const uint32 CameraActiveBorder = 20;
-	const float ScrollSpeed = 50.f;
-	if (MouseX >= ViewLeft && MouseX <= (ViewLeft + CameraActiveBorder))
-	{
-		const float delta = 1.0f - float(MouseX - ViewLeft) / CameraActiveBorder;
-		//SpectatorCameraSpeed = delta * MaxSpeed;
-		MoveRight(-ScrollSpeed * delta);
-	}
-	else if (MouseX >= (ViewRight - CameraActiveBorder) && MouseX <= ViewRight)
-	{
-		const float delta = float(MouseX - ViewRight + CameraActiveBorder) / CameraActiveBorder;
-		//SpectatorCameraSpeed = delta * MaxSpeed;
-		MoveRight(ScrollSpeed * delta);
-	}
-
-	if (MouseY >= ViewTop && MouseY <= (ViewTop + CameraActiveBorder))
-	{
-		const float delta = 1.0f - float(MouseY - ViewTop) / CameraActiveBorder;
-		//SpectatorCameraSpeed = delta * MaxSpeed;
-		MoveUp(ScrollSpeed * delta);
-	}
-	else if (MouseY >= (ViewBottom - CameraActiveBorder) && MouseY <= ViewBottom)
-	{
-		const float delta = float(MouseY - (ViewBottom - CameraActiveBorder)) / CameraActiveBorder;
-		//SpectatorCameraSpeed = delta * MaxSpeed;
-		MoveUp(-ScrollSpeed * delta);
-	}
 }
 
 UCameraComponent* ATDMobaPlayerCameraManager::GetPawnCamera()

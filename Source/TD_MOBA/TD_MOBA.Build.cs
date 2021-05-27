@@ -18,6 +18,7 @@ public class TD_MOBA : ModuleRules
 			"GameplayTags",
 			"GameplayTasks",
 			"AIModule",
+			"UMG",
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });
