@@ -35,10 +35,9 @@ void ATDMobaPlayerCameraManager::UpdatePOV(FTViewTarget & OutVT)
 	//锁住camera是指相机跟着pawn位移，反之跟着鼠标走
 	if (!bLockCamera && GetPawnCamera())
 	{
+		//初始化POV
 		OutVT.POV.Location = FreeCamOffset;
 
-
-		//TODO : 根据Mouse的XY 对POV进行上下左右移动
 		FVector2D MousePosition;
 		ULocalPlayer* const LocalPlayer = Cast<ULocalPlayer>(PCOwner->Player);
 		if (!LocalPlayer->ViewportClient->GetMousePosition(MousePosition))
@@ -53,31 +52,32 @@ void ATDMobaPlayerCameraManager::UpdatePOV(FTViewTarget & OutVT)
 		const uint32 ViewBottom = ViewTop + FMath::TruncToInt(LocalPlayer->Size.Y * ViewportSize.Y);
 		const uint32 MouseX = MousePosition.X;//鼠标的x轴
 		const uint32 MouseY = MousePosition.Y;//鼠标y轴
+		
+		//border 参数用于配置 鼠标与最近边的宽度为多少时触发 视点的上下左右偏移
 		const uint32 CameraActiveBorder = 20;
-		const float ScrollSpeed = 50.f;
+		const float ScrollSpeed = 30.f;
+
+		//通过鼠标的位置 判定鼠标在哪条最近的边上
+		//delta则是用于对速度有一个非线性的变化
 		if (MouseX >= ViewLeft && MouseX <= (ViewLeft + CameraActiveBorder))
 		{
 			const float delta = 1.0f - float(MouseX - ViewLeft) / CameraActiveBorder;
-			//SpectatorCameraSpeed = delta * MaxSpeed;
 			MoveRight(-ScrollSpeed * delta);
 		}
 		else if (MouseX >= (ViewRight - CameraActiveBorder) && MouseX <= ViewRight)
 		{
 			const float delta = float(MouseX - ViewRight + CameraActiveBorder) / CameraActiveBorder;
-			//SpectatorCameraSpeed = delta * MaxSpeed;
 			MoveRight(ScrollSpeed * delta);
 		}
 
 		if (MouseY >= ViewTop && MouseY <= (ViewTop + CameraActiveBorder))
 		{
 			const float delta = 1.0f - float(MouseY - ViewTop) / CameraActiveBorder;
-			//SpectatorCameraSpeed = delta * MaxSpeed;
 			MoveUp(ScrollSpeed * delta);
 		}
 		else if (MouseY >= (ViewBottom - CameraActiveBorder) && MouseY <= ViewBottom)
 		{
 			const float delta = float(MouseY - (ViewBottom - CameraActiveBorder)) / CameraActiveBorder;
-			//SpectatorCameraSpeed = delta * MaxSpeed;
 			MoveUp(-ScrollSpeed * delta);
 		}
 	}
