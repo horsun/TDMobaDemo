@@ -9,6 +9,8 @@
 ATDMobaPlayerController::ATDMobaPlayerController(const FObjectInitializer& ObjectInitializer)
 {
 	PlayerCameraManagerClass = ATDMobaPlayerCameraManager::StaticClass();
+	bEnableClickEvents = true;
+	bEnableMouseOverEvents = true;
 }
 
 
