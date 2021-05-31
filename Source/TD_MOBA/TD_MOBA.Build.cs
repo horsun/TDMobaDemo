@@ -20,9 +20,11 @@ public class TD_MOBA : ModuleRules
 			"AIModule",
 			"UMG",
 		});
-
 		PrivateDependencyModuleNames.AddRange(new string[] { });
-
+		PublicIncludePaths.AddRange(new string[] {
+			"TD_MOBA/Managers",
+			"TD_MOBA/Characters",
+		});
 		// Uncomment if you are using Slate UI
 		// PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
 
