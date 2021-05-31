@@ -13,6 +13,7 @@ class TD_MOBA_API AMOBACharacter : public ACharacter
 
 public:
 	AMOBACharacter();
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	/**
 	*Character的属性获取 GDAttributeSetBase??
@@ -20,6 +21,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MOBA|角色|属性")
 	virtual int32 GetCharacterLevel() const;
 
+	UFUNCTION(BlueprintCallable,Category ="MOBA|角色|属性")
+	virtual void SetCharacterLevel(int32 TargetLevel);
+	
 	UFUNCTION(BlueprintCallable, Category = "MOBA|角色|属性")
 	virtual float GetHealth() const;
 
@@ -42,7 +46,9 @@ protected:
 	UFUNCTION()
 	virtual void CursorOverEvent(AActor* touchedActor);
 
-
+	UPROPERTY(EditAnywhere,Replicated)
+	int32 CharacterLevel = 1;
+	
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

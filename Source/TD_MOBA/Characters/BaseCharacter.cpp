@@ -2,6 +2,7 @@
 
 
 #include "BaseCharacter.h"
+#include "AbilitySystemComponent.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -16,6 +17,9 @@ ABaseCharacter::ABaseCharacter()
 		SpringArm->TargetArmLength = 800.f;
 		SpringArm->SetRelativeRotation({-50,0,0});
 	}
+	MobaAbilitySystemComponent  = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComp"));
+	MobaAbilitySystemComponent->SetIsReplicated(true);
+	MOBAAttributeSet = CreateDefaultSubobject<UTDMOBAAttribute>(TEXT("MOBAAttributeSet"));
 }
 
 UAbilitySystemComponent* ABaseCharacter::GetAbilitySystemComponent() const
@@ -25,32 +29,37 @@ UAbilitySystemComponent* ABaseCharacter::GetAbilitySystemComponent() const
 
 int32 ABaseCharacter::GetCharacterLevel() const
 {
-	return 0;
+	return CharacterLevel;
+}
+
+void ABaseCharacter::SetCharacterLevel(int32 TargetLevel)
+{
+	CharacterLevel = TargetLevel;
 }
 
 float ABaseCharacter::GetHealth() const
 {
-	return 0.f;
+	return MOBAAttributeSet->GetHealth();
 }
 
 float ABaseCharacter::GetMaxHealth() const
 {
-	return  0.f;
+	return MOBAAttributeSet->GetMaxHealth(); 
 }
 
 float ABaseCharacter::GetMana() const
 {
-	return 0.f;
+	return MOBAAttributeSet->GetMana();
 }
 
 float ABaseCharacter::GetMaxMana() const
 {
-	return  0.f;
+	return  MOBAAttributeSet->GetMaxMana();
 }
 
 float ABaseCharacter::GetMoveSpeed() const
 {
-	return 0.f;
+	return MOBAAttributeSet->GetMoveSpeed();
 }
 
 // Called when the game starts or when spawned

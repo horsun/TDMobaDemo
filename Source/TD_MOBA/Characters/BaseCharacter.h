@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
-#include "AbilitySystemComponent.h"
 #include "MOBACharacter.h"
+#include "Abilities/TDMOBAAttribute.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
@@ -25,10 +25,12 @@ public:
 
 	virtual int32 GetCharacterLevel() const override;
 
+	virtual void SetCharacterLevel(int32 TargetLevel) override;
+
 	virtual float GetHealth() const override;
 
 	virtual float GetMaxHealth() const override;
-	
+
 	virtual float GetMana() const override;
 
 	virtual float GetMaxMana() const override;
@@ -36,17 +38,23 @@ public:
 	virtual float GetMoveSpeed() const override;
 
 
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	UAbilitySystemComponent* MobaAbilitySystemComponent = nullptr;
 	
-	UPROPERTY(Category=Components,VisibleAnywhere,BlueprintReadOnly)
-	USpringArmComponent * SpringArm;
-	UPROPERTY(Category=Components,VisibleAnywhere,BlueprintReadOnly)
-	UCameraComponent *Camera;
+	UPROPERTY(Category=Components, VisibleAnywhere, BlueprintReadOnly)
+	USpringArmComponent* SpringArm;
+	
+	UPROPERTY(Category=Components, VisibleAnywhere, BlueprintReadOnly)
+	UCameraComponent* Camera;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UAbilitySystemComponent* MobaAbilitySystemComponent;
+	
+	UPROPERTY()
+	UTDMOBAAttribute* MOBAAttributeSet;
+	
+	
 
 
 public:

@@ -10,9 +10,19 @@ AMOBACharacter::AMOBACharacter()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
+void AMOBACharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+}
+
 int32 AMOBACharacter::GetCharacterLevel() const
 {
 	return 0;
+}
+
+void AMOBACharacter::SetCharacterLevel(int32 TargetLevel)
+{
+	CharacterLevel = TargetLevel;
 }
 
 float AMOBACharacter::GetHealth() const
