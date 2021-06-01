@@ -7,7 +7,7 @@
 // Sets default values
 ABaseCharacter::ABaseCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SprintArm"));
 	SpringArm->SetupAttachment(RootComponent);
@@ -15,9 +15,12 @@ ABaseCharacter::ABaseCharacter()
 	Camera->SetupAttachment(SpringArm);
 	{
 		SpringArm->TargetArmLength = 800.f;
-		SpringArm->SetRelativeRotation({-50,0,0});
+		SpringArm->SetRelativeRotation({-50, 0, 0});
+		SpringArm->bInheritPitch = false;
+		SpringArm->bInheritRoll = false;
+		SpringArm->bInheritYaw = false;
 	}
-	MobaAbilitySystemComponent  = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComp"));
+	MobaAbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComp"));
 	MobaAbilitySystemComponent->SetIsReplicated(true);
 	MOBAAttributeSet = CreateDefaultSubobject<UTDMOBAAttribute>(TEXT("MOBAAttributeSet"));
 }
@@ -44,7 +47,7 @@ float ABaseCharacter::GetHealth() const
 
 float ABaseCharacter::GetMaxHealth() const
 {
-	return MOBAAttributeSet->GetMaxHealth(); 
+	return MOBAAttributeSet->GetMaxHealth();
 }
 
 float ABaseCharacter::GetMana() const
@@ -54,7 +57,7 @@ float ABaseCharacter::GetMana() const
 
 float ABaseCharacter::GetMaxMana() const
 {
-	return  MOBAAttributeSet->GetMaxMana();
+	return MOBAAttributeSet->GetMaxMana();
 }
 
 float ABaseCharacter::GetMoveSpeed() const
@@ -66,14 +69,12 @@ float ABaseCharacter::GetMoveSpeed() const
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
 void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
@@ -81,4 +82,3 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
-

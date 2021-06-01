@@ -19,19 +19,20 @@ class TD_MOBA_API ATDMobaPlayerController : public APlayerController
 public:
 	explicit ATDMobaPlayerController(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
-	
+
 	void SetDestination_Pressed();
-	
+
 	void SetDestination_Released();
-	
+
 	void ViewerSwitch();
-	
+
 	void StopAction();
 	void FindPawn_Pressed();
 	void FindPawn_Released();
 
 
 	void MoveToHitLocation();
+
 
 	ATDMobaPlayerCameraManager* TDMobaCameraManager = nullptr;
 	void ZoomIn(float val);
@@ -41,8 +42,8 @@ protected:
 	virtual void SetupInputComponent() override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
-	
-	
+	bool bUIMode = false;
+
 
 private:
 	bool bKeepMovingToMouse = false;

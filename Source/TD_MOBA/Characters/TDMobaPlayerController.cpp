@@ -2,6 +2,8 @@
 
 
 #include "TDMobaPlayerController.h"
+
+#include "MOBACharacter.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "UObject/UObjectGlobals.h"
 #include "Blueprint/UserWidget.h"
@@ -12,9 +14,8 @@ ATDMobaPlayerController::ATDMobaPlayerController(const FObjectInitializer& Objec
 	PlayerCameraManagerClass = ATDMobaPlayerCameraManager::StaticClass();
 	bEnableClickEvents = true;
 	bEnableMouseOverEvents = true;
-	bShowMouseCursor=true;
+	bShowMouseCursor = true;
 }
-
 
 
 void ATDMobaPlayerController::SetupInputComponent()
@@ -29,7 +30,7 @@ void ATDMobaPlayerController::SetupInputComponent()
 	InputComponent->BindAction("FindPawn", IE_Pressed, this, &ATDMobaPlayerController::FindPawn_Pressed);
 	InputComponent->BindAction("FindPawn", IE_Released, this, &ATDMobaPlayerController::FindPawn_Released);
 	//Axis
-	InputComponent->BindAxis("ZoomCamera",this,&ATDMobaPlayerController::ZoomIn);
+	InputComponent->BindAxis("ZoomCamera", this, &ATDMobaPlayerController::ZoomIn);
 }
 
 void ATDMobaPlayerController::SetDestination_Pressed()
@@ -45,12 +46,14 @@ void ATDMobaPlayerController::SetDestination_Released()
 void ATDMobaPlayerController::MoveToHitLocation()
 {
 	FHitResult hit;
-	GetHitResultUnderCursor(ECC_Visibility, true, hit);
-	if ((GetPawn()->GetActorLocation() - hit.Location).Size() >= ignoreDistance)
+	bool bHit = GetHitResultUnderCursor(ECC_Visibility, true, hit);
+	if (bHit && (GetPawn()->GetActorLocation() - hit.Location).Size() >= ignoreDistance)
 	{
 		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, hit.Location);
-		UMaterial * DecalMat = LoadObject<UMaterial>(nullptr,TEXT("Material'/Game/UI/M_Cursor_Decal.M_Cursor_Decal'"),nullptr, LOAD_None, nullptr);
-		UGameplayStatics::SpawnDecalAtLocation(GetWorld(),DecalMat,FVector::OneVector,hit.Location,hit.Normal.Rotation(),2.f);
+		UMaterial* DecalMat = LoadObject<UMaterial>(nullptr,TEXT("Material'/Game/UI/M_Cursor_Decal.M_Cursor_Decal'"),
+		                                            nullptr, LOAD_None, nullptr);
+		UGameplayStatics::SpawnDecalAtLocation(GetWorld(), DecalMat, FVector::OneVector, hit.Location,
+		                                       hit.Normal.Rotation(), 2.f);
 	}
 }
 
@@ -63,6 +66,18 @@ void ATDMobaPlayerController::Tick(float DeltaSeconds)
 	if (bKeepMovingToMouse)
 	{
 		MoveToHitLocation();
+	}
+	if (!bUIMode)
+	{
+		FHitResult hit;
+		if (GetHitResultUnderCursor(ECC_Visibility, true, hit))
+		{
+			AMOBACharacter* hitActor = Cast<AMOBACharacter>(hit.Actor);
+			if (hitActor)
+			{
+				hitActor->test();
+			}
+		}
 	}
 }
 
@@ -100,7 +115,8 @@ void ATDMobaPlayerController::FindPawn_Released()
 {
 	bKeepCameraToPawn = false;
 }
+
 void ATDMobaPlayerController::ZoomIn(float val)
 {
-	TDMobaCameraManager->ZoomIn(val*20);
+	TDMobaCameraManager->ZoomIn(val * 20);
 }

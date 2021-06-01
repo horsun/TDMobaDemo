@@ -3,8 +3,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "Abilities/GameplayAbility.h"
 #include "GameFramework/Character.h"
 #include "MOBACharacter.generated.h"
+
+
+UENUM()
+enum class ESkillKeyMap:uint8
+{
+	ESkillKeyMap_AbilityQ=0,
+	ESkillKeyMap_AbilityW,
+	ESkillKeyMap_AbilityE,
+	ESkillKeyMap_AbilityR,
+};
+
 
 UCLASS()
 class TD_MOBA_API AMOBACharacter : public ACharacter
@@ -21,9 +34,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MOBA|角色|属性")
 	virtual int32 GetCharacterLevel() const;
 
-	UFUNCTION(BlueprintCallable,Category ="MOBA|角色|属性")
+	UFUNCTION(BlueprintCallable, Category ="MOBA|角色|属性")
 	virtual void SetCharacterLevel(int32 TargetLevel);
-	
+
 	UFUNCTION(BlueprintCallable, Category = "MOBA|角色|属性")
 	virtual float GetHealth() const;
 
@@ -46,13 +59,21 @@ protected:
 	UFUNCTION()
 	virtual void CursorOverEvent(AActor* touchedActor);
 
-	UPROPERTY(EditAnywhere,Replicated)
+	UPROPERTY(EditAnywhere, Replicated)
 	int32 CharacterLevel = 1;
-	
+
+	UPROPERTY(EditAnywhere, Replicated)
+	TMap<ESkillKeyMap, UGameplayAbility*> CharacterAbilityMap;
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	UFUNCTION(BlueprintCallable)
+	void test()
+	{
+		UE_LOG(LogTemp, Warning, TEXT("test"));
+	};
 };
