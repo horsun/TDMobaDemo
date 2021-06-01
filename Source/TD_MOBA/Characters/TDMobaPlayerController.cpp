@@ -67,18 +67,18 @@ void ATDMobaPlayerController::Tick(float DeltaSeconds)
 	{
 		MoveToHitLocation();
 	}
-	if (!bUIMode)
-	{
-		FHitResult hit;
-		if (GetHitResultUnderCursor(ECC_Visibility, true, hit))
-		{
-			AMOBACharacter* hitActor = Cast<AMOBACharacter>(hit.Actor);
-			if (hitActor)
-			{
-				hitActor->test();
-			}
-		}
-	}
+	// if (!bUIMode)
+	// {
+	// 	FHitResult hit;
+	// 	if (GetHitResultUnderCursor(ECC_Visibility, true, hit))
+	// 	{
+	// 		AMOBACharacter* hitActor = Cast<AMOBACharacter>(hit.Actor);
+	// 		if (hitActor)
+	// 		{
+	// 			hitActor->test();
+	// 		}
+	// 	}
+	// }
 }
 
 void ATDMobaPlayerController::BeginPlay()

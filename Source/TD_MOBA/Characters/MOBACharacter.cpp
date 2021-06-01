@@ -50,6 +50,16 @@ float AMOBACharacter::GetMoveSpeed() const
 	return 0.f;
 }
 
+float AMOBACharacter::GetAttackSpeed() const
+{
+	return 0.f;
+}
+
+float AMOBACharacter::SetAttackSpeed() const
+{
+	return 0.f;
+}
+
 // Called when the game starts or when spawned
 void AMOBACharacter::BeginPlay()
 {
