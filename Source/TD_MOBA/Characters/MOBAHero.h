@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystemInterface.h"
 #include "MOBACharacter.h"
 #include "Abilities/TDMOBAAttribute.h"
 #include "Camera/CameraComponent.h"
@@ -13,7 +12,7 @@
 
 
 UCLASS()
-class TD_MOBA_API AMOBAHero : public AMOBACharacter, public IAbilitySystemInterface
+class TD_MOBA_API AMOBAHero : public AMOBACharacter
 {
 	GENERATED_BODY()
 
@@ -21,7 +20,6 @@ public:
 	// Sets default values for this character's properties
 	AMOBAHero();
 
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	virtual int32 GetCharacterLevel() const override;
 
@@ -49,14 +47,10 @@ protected:
 	UPROPERTY(Category=Components, VisibleAnywhere, BlueprintReadOnly)
 	UCameraComponent* Camera;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UAbilitySystemComponent* MobaAbilitySystemComponent;
 
-	UPROPERTY()
-	UTDMOBAAttribute* MOBAAttributeSet;
 
-	UPROPERTY(EditAnywhere,BlueprintreadWrite)
-	TSubclassOf<UBaseAbility> MyAbility;
+
+	
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

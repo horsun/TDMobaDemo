@@ -23,15 +23,10 @@ AMOBAHero::AMOBAHero()
 		SpringArm->bInheritRoll = false;
 		SpringArm->bInheritYaw = false;
 	}
-	MobaAbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComp"));
-	MobaAbilitySystemComponent->SetIsReplicated(true);
-	MOBAAttributeSet = CreateDefaultSubobject<UTDMOBAAttribute>(TEXT("MOBAAttributeSet"));
+
 }
 
-UAbilitySystemComponent* AMOBAHero::GetAbilitySystemComponent() const
-{
-	return MobaAbilitySystemComponent;
-}
+
 
 int32 AMOBAHero::GetCharacterLevel() const
 {
@@ -76,13 +71,7 @@ void AMOBAHero::PossessedBy(AController* NewController)
 void AMOBAHero::BeginPlay()
 {
 	Super::BeginPlay();
-	//在游戏开始的时候赋予英雄对应的技能
-	for (auto it = MobaAbilityMap.CreateIterator(); it; ++it)
-	{
-		MobaAbilitySystemComponent->GiveAbility(
-			FGameplayAbilitySpec(it.Value())
-		);
-	}
+	
 }
 
 // Called every frame

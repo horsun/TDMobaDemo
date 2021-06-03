@@ -8,6 +8,14 @@ AMOBACharacter::AMOBACharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	MobaAbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystemComp"));
+	MobaAbilitySystemComponent->SetIsReplicated(true);
+	MOBAAttributeSet = CreateDefaultSubobject<UTDMOBAAttribute>(TEXT("MOBAAttributeSet"));
+}
+
+UAbilitySystemComponent* AMOBACharacter::GetAbilitySystemComponent() const
+{
+	return MobaAbilitySystemComponent;
 }
 
 void AMOBACharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -50,21 +58,36 @@ float AMOBACharacter::GetMoveSpeed() const
 	return 0.f;
 }
 
+void AMOBACharacter::SetMoveSpeed() const
+{
+}
+
 float AMOBACharacter::GetAttackSpeed() const
 {
 	return 0.f;
 }
 
-float AMOBACharacter::SetAttackSpeed() const
+void AMOBACharacter::SetAttackSpeed() const
 {
-	return 0.f;
+}
+
+bool AMOBACharacter::IsDie() const
+{
+	return false;
 }
 
 // Called when the game starts or when spawned
 void AMOBACharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	OnBeginCursorOver.AddDynamic(this,&AMOBACharacter::CursorOverEvent);
+	OnBeginCursorOver.AddDynamic(this, &AMOBACharacter::CursorOverEvent);
+	//在游戏开始的时候赋予角色对应的能力
+	for (auto it = MobaAbilityMap.CreateIterator(); it; ++it)
+	{
+		MobaAbilitySystemComponent->GiveAbility(
+			FGameplayAbilitySpec(it.Value())
+		);
+	}
 }
 
 void AMOBACharacter::CursorOverEvent(AActor* touchedActor)

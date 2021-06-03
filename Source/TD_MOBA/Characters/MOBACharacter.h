@@ -4,8 +4,9 @@
 
 #include "CoreMinimal.h"
 
+#include "AbilitySystemInterface.h"
 #include "Abilities/BaseAbility.h"
-#include "Abilities/GameplayAbility.h"
+#include "Abilities/TDMOBAAttribute.h"
 #include "GameFramework/Character.h"
 #include "MOBACharacter.generated.h"
 
@@ -17,17 +18,21 @@ enum class ESkillKeyMap:uint8
 	ESkillKeyMap_AbilityW,
 	ESkillKeyMap_AbilityE,
 	ESkillKeyMap_AbilityR,
+	ESkillKeyMap_NormalAttack,
 };
 
 
 UCLASS()
-class TD_MOBA_API AMOBACharacter : public ACharacter
+class TD_MOBA_API AMOBACharacter : public ACharacter , public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
 public:
 	AMOBACharacter();
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
 
 	/**
 	*Character的属性获取 GDAttributeSetBase??
@@ -53,12 +58,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MOBA|角色|属性") //移速
 	virtual float GetMoveSpeed() const;
 
+	UFUNCTION(BlueprintCallable,Category ="MOBA|角色|属性") 
+	virtual void SetMoveSpeed() const;
 	UFUNCTION(BlueprintCallable, Category = "MOBA|角色|属性")
 	virtual float GetAttackSpeed() const;
 	
 	UFUNCTION(BlueprintCallable, Category = "MOBA|角色|属性")
-	virtual float SetAttackSpeed() const;
+	virtual void SetAttackSpeed() const;
 
+	UFUNCTION(BlueprintCallable,BlueprintPure)
+	virtual bool IsDie() const ;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -68,6 +77,13 @@ protected:
 	UPROPERTY(EditAnywhere, Replicated)
 	int32 CharacterLevel = 1;
 
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UAbilitySystemComponent* MobaAbilitySystemComponent;
+	
+	UPROPERTY()
+	UTDMOBAAttribute* MOBAAttributeSet;
+	
 	UPROPERTY(EditAnywhere, Replicated, BlueprintReadWrite)
 	TMap<ESkillKeyMap, TSubclassOf<UBaseAbility>> MobaAbilityMap;
 
